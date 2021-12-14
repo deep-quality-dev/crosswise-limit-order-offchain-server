@@ -1,5 +1,10 @@
-import 'dotenv/config'
+import dotenv from 'dotenv'
 import sample from 'lodash/sample'
+
+const envFound = dotenv.config()
+if (envFound.error) {
+  throw new Error("Couldn't find .env file")
+}
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
@@ -21,6 +26,8 @@ const config = {
   orderBook: process.env.ORDERBOOK_ADDRESS,
 }
 
-export const getRpcUrl = sample(config.rpcUrls)
+export const getRpcUrl = () => {
+  return sample(config.rpcUrls)
+}
 
 export default config

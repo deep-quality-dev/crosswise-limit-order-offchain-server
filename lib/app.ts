@@ -1,13 +1,13 @@
-import * as express from 'express'
-import * as bodyParser from 'body-parser'
+import express from 'express'
+import bodyParser from 'body-parser'
 import { Routes } from './routes/routes'
 import { ConnectionOptions, connect } from 'mongoose'
+import config from './config'
 
 class App {
   public app: express.Application = express()
   public routePrv: Routes = new Routes()
-  public mongoUrl =
-    'mongodb://limitorder:123456789@localhost:27017/crosswise-offchain'
+  public mongoUrl = config.databaseUrl
 
   constructor() {
     this.config()
@@ -33,8 +33,9 @@ class App {
       }
       await connect(mongoURI, options)
       console.log('MongoDB Connected...')
-    } catch (err) {
-      console.error(err.message)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error(err?.message)
       // Exit process with failure
       process.exit(1)
     }

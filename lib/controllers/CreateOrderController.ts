@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
-import { validationResult } from 'express-validator/check'
+import { validationResult } from 'express-validator'
 import HttpStatusCodes from 'http-status-codes'
 import { OrderService } from '../services/OrderService'
 import OrderModel, { IOrder } from '../models/Order'
 import { OrderState } from '../types/Order'
-import { transferOrder } from '../types/helpers'
+import { transformOrder } from '../types/helpers'
 
 export class CreateOrderController {
   constructor(private orderService: OrderService = new OrderService()) {}
@@ -18,6 +18,7 @@ export class CreateOrderController {
     }
 
     const param = req.body
+
     const order: IOrder = {
       hash: param.hash.toString(),
       maker: param.maker.toString(),
@@ -47,7 +48,7 @@ export class CreateOrderController {
         })
       }
 
-      const success = this.orderService.createOrder(transferOrder(order))
+      const success = this.orderService.createOrder(transformOrder(order))
       if (success) {
         const newOrder = new OrderModel(order)
         await newOrder.save()
@@ -64,8 +65,9 @@ export class CreateOrderController {
           },
         ],
       })
-    } catch (err) {
-      console.error(err.message)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error(err?.message)
       return res
         .status(HttpStatusCodes.INTERNAL_SERVER_ERROR)
         .send('Server Error')

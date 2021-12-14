@@ -22,8 +22,9 @@ export class OrderService {
     try {
       await this.orderbook.createOrder(order)
       return { success: true }
-    } catch (err) {
-      console.error(err.message)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error(error?.message)
       return { success: false, message: error?.data?.message ?? error.message }
     }
   }

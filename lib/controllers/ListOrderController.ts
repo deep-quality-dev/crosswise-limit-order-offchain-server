@@ -13,8 +13,9 @@ export class ListOrderController {
         state: OrderState.pending,
       })
       res.json(orders)
-    } catch (err) {
-      console.error(err.message)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error(err?.message)
       res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send('Server Error')
     }
   }
@@ -28,8 +29,9 @@ export class ListOrderController {
         state: OrderState.executed,
       })
       res.json(orders)
-    } catch (err) {
-      console.error(err.message)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error(err?.message)
       res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).send('Server Error')
     }
   }
