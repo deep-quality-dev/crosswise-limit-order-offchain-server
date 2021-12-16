@@ -9,7 +9,7 @@ export class OrderService {
     private orderbook: Contract = new Contract(
       config.orderBook,
       OrderBookAbi,
-      Providers.Testnet.provider
+      Providers.Testnet.wallet
     )
   ) {}
 

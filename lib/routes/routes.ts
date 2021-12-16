@@ -2,6 +2,7 @@ import { isAddress } from '@ethersproject/address'
 import { check, param } from 'express-validator'
 import { CreateOrderController } from '../controllers/CreateOrderController'
 import { ListOrderController } from '../controllers/ListOrderController'
+import { localToUTC } from '../types/helpers'
 
 export class Routes {
   public createOrderController: CreateOrderController =
@@ -25,9 +26,11 @@ export class Routes {
             (amountIn, { req }) =>
               amountIn.length >= req.body.amountOutMin.length
           ),
-        check('receipt').custom(receipt => isAddress(receipt)),
+        check('recipient').custom(receipt => isAddress(receipt)),
         check('deadline').custom(
-          deadline => Number(deadline) > Date.now() / 1000
+          deadline =>
+            Number(deadline) >
+            Math.floor(localToUTC(Date.now()).getTime() / 1000)
         ),
         check('v')
           .isNumeric()

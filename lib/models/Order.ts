@@ -7,7 +7,7 @@ export type IOrder = {
   toToken: string
   amountIn: string
   amountOutMin: string
-  receipt: string
+  recipient: string
   deadline: number
   v: number
   r: string
@@ -41,7 +41,7 @@ const orderSchema: Schema = new Schema({
     type: String,
     required: false,
   },
-  receipt: {
+  recipient: {
     type: String,
     required: true,
   },

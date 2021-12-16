@@ -3,8 +3,8 @@ import { validationResult } from 'express-validator'
 import HttpStatusCodes from 'http-status-codes'
 import { OrderService } from '../services/OrderService'
 import OrderModel, { IOrder } from '../models/Order'
-import { OrderState } from '../types/Order'
-import { transformOrder } from '../types/helpers'
+import BigOrder, { OrderState } from '../types/Order'
+import { transformOrder, hashOrder } from '../types/helpers'
 
 export class CreateOrderController {
   constructor(private orderService: OrderService = new OrderService()) {}
@@ -26,12 +26,25 @@ export class CreateOrderController {
       toToken: param.toToken.toString(),
       amountIn: param.amountIn.toString(),
       amountOutMin: param.amountOutMin.toString(),
-      receipt: param.receipt.toString(),
+      recipient: param.recipient.toString(),
       deadline: Number(param.deadline),
       v: Number(param.v),
       r: param.r.toString(),
       s: param.s.toString(),
       state: OrderState.pending,
+    }
+
+    const bigOrder: BigOrder = transformOrder(order)
+    bigOrder.hash = hashOrder(bigOrder)
+
+    if (order.hash === bigOrder.hash) {
+      return res.status(HttpStatusCodes.BAD_REQUEST).json({
+        errors: [
+          {
+            msg: 'Hash not matched',
+          },
+        ],
+      })
     }
 
     try {
@@ -48,7 +61,7 @@ export class CreateOrderController {
         })
       }
 
-      const success = this.orderService.createOrder(transformOrder(order))
+      const { success } = await this.orderService.createOrder(bigOrder)
       if (success) {
         const newOrder = new OrderModel(order)
         await newOrder.save()

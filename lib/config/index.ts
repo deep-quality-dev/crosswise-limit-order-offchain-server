@@ -8,7 +8,7 @@ if (envFound.error) {
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
-const DEFAULT_PORT = '3000'
+const DEFAULT_PORT = '5000'
 
 const config = {
   https: {
@@ -24,6 +24,8 @@ const config = {
   privateKey: process.env.PRIVATE_KEY,
 
   orderBook: process.env.ORDERBOOK_ADDRESS,
+
+  settlement: process.env.SETTLEMENT_ADDRESS,
 }
 
 export const getRpcUrl = () => {
