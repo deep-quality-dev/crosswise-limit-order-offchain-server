@@ -1,8 +1,8 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import { Routes } from './routes/routes'
 import { ConnectionOptions, connect } from 'mongoose'
+import { Routes } from './routes/routes'
 import config from './config'
 
 class App {
@@ -22,6 +22,7 @@ class App {
     // serving static files
     this.app.use(express.static('public'))
     this.app.options('*', cors())
+    this.app.use(cors())
   }
 
   private async mongoSetup(): Promise<void> {
