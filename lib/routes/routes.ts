@@ -42,15 +42,10 @@ export class Routes {
     )
 
     app.get(
-      '/orders/pending/:address',
+      '/orders/:state/:address',
+      [param('state').isIn(['pending', 'executed'])],
       [param('address').not().isEmpty().isString()],
-      this.listOrderController.pendingOrders
-    )
-
-    app.get(
-      '/orders/executed/:address',
-      [param('address').not().isEmpty().isString()],
-      this.listOrderController.executedOrders
+      this.listOrderController.listOrders
     )
   }
 }

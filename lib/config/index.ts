@@ -29,7 +29,9 @@ const config = {
 }
 
 export const getRpcUrl = () => {
-  return sample(config.rpcUrls)
+  const rpcUrl = sample(config.rpcUrls)
+  console.log('rpcUrl=', rpcUrl)
+  return rpcUrl
 }
 
 export default config

@@ -1,17 +1,8 @@
 import { Document, model, Schema } from 'mongoose'
+import { IOrder } from '../types/order'
 
-export type IOrder = {
-  hash: string
-  maker: string
-  fromToken: string
-  toToken: string
-  amountIn: string
-  amountOutMin: string
-  recipient: string
-  deadline: number
-  v: number
-  r: string
-  s: string
+export interface IOrderDocument extends IOrder, Document {
+  state: string
 }
 
 const orderSchema: Schema = new Schema({
@@ -70,4 +61,4 @@ const orderSchema: Schema = new Schema({
   },
 })
 
-export default model<IOrder & Document>('Orders', orderSchema)
+export default model<IOrderDocument>('Orders', orderSchema)

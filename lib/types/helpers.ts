@@ -1,13 +1,12 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { keccak256 } from '@ethersproject/keccak256'
-import Order from './Order'
-import { IOrder } from '../models/Order'
+import { BigOrder, IOrder } from './order'
 
 const ORDER_TYPEHASH =
   '0x7c228c78bd055996a44b5046fb56fa7c28c66bce92d9dc584f742b2cd76a140f'
 
-export const transformOrder = (order: IOrder): Order => {
+export const transformOrder = (order: IOrder): BigOrder => {
   return {
     hash: order.hash,
     maker: order.maker,
@@ -23,7 +22,7 @@ export const transformOrder = (order: IOrder): Order => {
   }
 }
 
-export const hashOrder = (order: Order): string => {
+export const hashOrder = (order: BigOrder): string => {
   return keccak256(
     defaultAbiCoder.encode(
       [

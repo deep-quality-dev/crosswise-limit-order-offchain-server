@@ -2,10 +2,10 @@ import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
 import HttpStatusCodes from 'http-status-codes'
 import { OrderService } from '../services/OrderService'
-import OrderModel, { IOrder } from '../models/Order'
-import BigOrder, { OrderState } from '../types/Order'
+import OrderModel, { IOrderDocument } from '../models/order'
+import { IOrder, BigOrder, OrderState } from '../types/order'
 import { transformOrder, hashOrder } from '../types/helpers'
-import Log from '../Log'
+import Log from '../log'
 
 export class CreateOrderController {
   constructor(private orderService: OrderService = new OrderService()) {}
@@ -57,7 +57,7 @@ export class CreateOrderController {
     }
 
     try {
-      const existOrder: IOrder = await OrderModel.findOne({
+      const existOrder: IOrderDocument = await OrderModel.findOne({
         hash: order.hash,
       })
       if (existOrder) {
@@ -79,8 +79,11 @@ export class CreateOrderController {
 
       const { success } = await this.orderService.createOrder(order)
       if (success) {
-        order['state'] = OrderState.pending
-        const newOrder = new OrderModel(order)
+        const orderDocument: IOrderDocument = {
+          ...order,
+          state: OrderState.pending,
+        }
+        const newOrder = new OrderModel(orderDocument)
         await newOrder.save()
 
         Log.d('<< createOrder', {

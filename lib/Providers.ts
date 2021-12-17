@@ -1,5 +1,5 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
 import 'dotenv/config'
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
 import config, { getRpcUrl } from './config'
 

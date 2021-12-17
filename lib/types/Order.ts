@@ -1,6 +1,20 @@
 import { BigNumber } from '@ethersproject/bignumber'
 
-type Order = {
+export type IOrder = {
+  hash: string
+  maker: string
+  fromToken: string
+  toToken: string
+  amountIn: string
+  amountOutMin: string
+  recipient: string
+  deadline: number
+  v: number
+  r: string
+  s: string
+}
+
+export type BigOrder = {
   hash: string
   maker: string
   fromToken: string
@@ -20,5 +34,3 @@ export enum OrderState {
   executed = 'executed',
   canceled = 'canceled',
 }
-
-export default Order

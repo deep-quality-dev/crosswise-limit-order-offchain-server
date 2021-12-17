@@ -4,6 +4,7 @@ import cors from 'cors'
 import { ConnectionOptions, connect } from 'mongoose'
 import { Routes } from './routes/routes'
 import config from './config'
+import Providers from './providers'
 
 class App {
   public app: express.Application = express()
@@ -14,6 +15,7 @@ class App {
     this.config()
     this.mongoSetup()
     this.routePrv.routes(this.app)
+    this.providers()
   }
 
   private config(): void {
@@ -42,6 +44,12 @@ class App {
       // Exit process with failure
       process.exit(1)
     }
+  }
+
+  private async providers(): Promise<void> {
+    console.log('Waiting for network')
+    const network = await Providers.Testnet.provider.detectNetwork()
+    console.log(network)
   }
 }
 
