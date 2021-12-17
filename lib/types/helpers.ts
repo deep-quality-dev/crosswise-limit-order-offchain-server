@@ -1,7 +1,7 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { keccak256 } from '@ethersproject/keccak256'
-import Order, { OrderState } from './Order'
+import Order from './Order'
 import { IOrder } from '../models/Order'
 
 const ORDER_TYPEHASH =
@@ -20,7 +20,6 @@ export const transformOrder = (order: IOrder): Order => {
     v: BigNumber.from(order.v),
     r: order.r,
     s: order.s,
-    state: order.state as OrderState,
   }
 }
 

@@ -5,6 +5,7 @@ import { OrderService } from '../services/OrderService'
 import OrderModel, { IOrder } from '../models/Order'
 import BigOrder, { OrderState } from '../types/Order'
 import { transformOrder, hashOrder } from '../types/helpers'
+import Log from '../Log'
 
 export class CreateOrderController {
   constructor(private orderService: OrderService = new OrderService()) {}
@@ -31,13 +32,21 @@ export class CreateOrderController {
       v: Number(param.v),
       r: param.r.toString(),
       s: param.s.toString(),
-      state: OrderState.pending,
     }
+
+    Log.d('createOrder >> ', order)
 
     const bigOrder: BigOrder = transformOrder(order)
     bigOrder.hash = hashOrder(bigOrder)
 
     if (order.hash === bigOrder.hash) {
+      Log.e('<< createOrder', {
+        errors: [
+          {
+            msg: 'Hash not matched',
+          },
+        ],
+      })
       return res.status(HttpStatusCodes.BAD_REQUEST).json({
         errors: [
           {
@@ -52,6 +61,13 @@ export class CreateOrderController {
         hash: order.hash,
       })
       if (existOrder) {
+        Log.e('<< createOrder', {
+          errors: [
+            {
+              msg: 'Order already registered',
+            },
+          ],
+        })
         return res.status(HttpStatusCodes.BAD_REQUEST).json({
           errors: [
             {
@@ -61,16 +77,27 @@ export class CreateOrderController {
         })
       }
 
-      const { success } = await this.orderService.createOrder(bigOrder)
+      const { success } = await this.orderService.createOrder(order)
       if (success) {
+        order['state'] = OrderState.pending
         const newOrder = new OrderModel(order)
         await newOrder.save()
 
+        Log.d('<< createOrder', {
+          hash: newOrder.hash,
+        })
         return res.json({
           hash: newOrder.hash,
         })
       }
 
+      Log.e('<< createOrder', {
+        errors: [
+          {
+            msg: 'Failed to place Limit Order',
+          },
+        ],
+      })
       return res.status(HttpStatusCodes.BAD_REQUEST).json({
         errors: [
           {

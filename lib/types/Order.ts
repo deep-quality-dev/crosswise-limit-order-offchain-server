@@ -12,7 +12,6 @@ type Order = {
   v: BigNumber
   r: string
   s: string
-  state: OrderState
 }
 
 export enum OrderState {

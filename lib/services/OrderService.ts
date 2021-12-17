@@ -2,26 +2,26 @@ import { Contract } from '@ethersproject/contracts'
 import config from '../config'
 import OrderBookAbi from '../abis/OrderBook.json'
 import Providers from '../Providers'
-import Order from '../types/Order'
+import { IOrder } from 'models/Order'
 
 export class OrderService {
-  constructor(
-    private orderbook: Contract = new Contract(
-      config.orderBook,
-      OrderBookAbi,
-      Providers.Testnet.wallet
-    )
-  ) {}
+  constructor() {}
 
   public createOrder = async (
-    order: Order
+    order: IOrder
   ): Promise<{
     success: boolean
     message?: string
   }> => {
     try {
-      await this.orderbook.createOrder(order)
-      return { success: true }
+      const orderbook: Contract = new Contract(
+        config.orderBook,
+        OrderBookAbi,
+        Providers.Testnet.wallet
+      )
+      const tx = await orderbook.createOrder(order)
+      const receipt = await tx.wait()
+      return { success: receipt.status }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error(error?.message)

@@ -12,7 +12,6 @@ export type IOrder = {
   v: number
   r: string
   s: string
-  state: string
 }
 
 const orderSchema: Schema = new Schema({
