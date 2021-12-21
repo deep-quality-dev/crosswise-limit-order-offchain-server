@@ -28,7 +28,7 @@ export class OrderService {
         orderbook,
         'createOrder',
         [order],
-        1200
+        2000
       )
       const receipt: TransactionReceipt = await tx.wait()
       return { success: receipt.status > 0 ? true : false }
